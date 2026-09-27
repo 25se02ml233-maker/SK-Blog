@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Sign Up - RAVI TEJA BLOG</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="login-page">
+
+        <div class="login-box">
+
+            <h1>RAVI TEJA BLOG</h1>
+
+            <h2>Create Account</h2>
+
+            <p>Create your account to start blogging</p>
+
+
+            <form id="signupForm">
+
+                <input
+                    type="text"
+                    id="signupName"
+                    placeholder="Enter your name"
+                    required
+                >
+
+                <input
+                    type="email"
+                    id="signupEmail"
+                    placeholder="Enter your email"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="signupPassword"
+                    placeholder="Create a password"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Confirm your password"
+                    required
+                >
+
+                <button type="submit">
+                    Create Account
+                </button>
+
+            </form>
+
+
+            <p id="signupMessage"></p>
+
+
+            <p class="signup-text">
+
+                Already have an account?
+
+                <a href="login.html">
+                    Login
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Firebase Sign Up -->
+
+    <script type="module">
+
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            updateProfile
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+
+        const firebaseConfig = {
+
+            apiKey: "AIzaSyCIYgbWDOBvftTsqenycxbkaiZdyVnlRaY",
+
+            authDomain:
+                "ravi-teja-blog.firebaseapp.com",
+
+            projectId:
+                "ravi-teja-blog",
+
+            storageBucket:
+                "ravi-teja-blog.firebasestorage.app",
+
+            messagingSenderId:
+                "817838780230",
+
+            appId:
+                "1:817838780230:web:698c2b4a6a076bac9cbf47"
+
+        };
+
+
+        const app = initializeApp(firebaseConfig);
+
+        const auth = getAuth(app);
+
+
+        document
+            .getElementById("signupForm")
+            .addEventListener("submit", async function(event) {
+
+                event.preventDefault();
+
+
+                const name =
+                    document.getElementById("signupName").value.trim();
+
+
+                const email =
+                    document.getElementById("signupEmail").value.trim();
+
+
+                const password =
+                    document.getElementById("signupPassword").value;
+
+
+                const confirmPassword =
+                    document.getElementById("confirmPassword").value;
+
+
+                const message =
+                    document.getElementById("signupMessage");
+
+
+                if (password !== confirmPassword) {
+
+                    message.textContent =
+                        "Passwords do not match.";
+
+                    message.style.color = "red";
+
+                    return;
+                }
+
+
+                try {
+
+                    const userCredential =
+                        await createUserWithEmailAndPassword(
+                            auth,
+                            email,
+                            password
+                        );
+
+
+                    await updateProfile(
+                        userCredential.user,
+                        {
+                            displayName: name
+                        }
+                    );
+
+
+                    message.textContent =
+                        "Account created successfully!";
+
+                    message.style.color = "green";
+
+
+                    setTimeout(function() {
+
+                        window.location.href =
+                            "index.html";
+
+                    }, 1000);
+
+
+                } catch (error) {
+
+                    message.style.color = "red";
+
+
+                    if (error.code === "auth/email-already-in-use") {
+
+                        message.textContent =
+                            "This email is already registered.";
+
+                    } else if (error.code === "auth/weak-password") {
+
+                        message.textContent =
+                            "Password should be at least 6 characters.";
+
+                    } else if (error.code === "auth/invalid-email") {
+
+                        message.textContent =
+                            "Please enter a valid email.";
+
+                    } else {
+
+                        message.textContent =
+                            "Account creation failed. Please try again.";
+
+                    }
+
+                }
+
+            });
+
+    </script>
+
+</body>
+
+</html>

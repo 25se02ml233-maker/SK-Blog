@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login - RAVI TEJA BLOG</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="login-page">
+
+        <div class="login-box">
+
+            <h1>RAVI TEJA BLOG</h1>
+
+            <h2>Login</h2>
+
+            <p>Login to access your blog dashboard</p>
+
+
+            <form id="loginForm">
+
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="Enter your email"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="Enter your password"
+                    required
+                >
+
+                <button type="submit">
+                    Login
+                </button>
+
+            </form>
+
+
+            <p id="loginMessage"></p>
+
+
+            <p class="signup-text">
+
+                Don't have an account?
+
+                <a href="signup.html">
+                    Create Account
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Firebase Login -->
+
+    <script type="module">
+
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+
+        import {
+            getAuth,
+            signInWithEmailAndPassword
+        } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+
+        const firebaseConfig = {
+
+            apiKey: "AIzaSyCIYgbWDOBvftTsqenycxbkaiZdyVnlRaY",
+
+            authDomain:
+                "ravi-teja-blog.firebaseapp.com",
+
+            projectId:
+                "ravi-teja-blog",
+
+            storageBucket:
+                "ravi-teja-blog.firebasestorage.app",
+
+            messagingSenderId:
+                "817838780230",
+
+            appId:
+                "1:817838780230:web:698c2b4a6a076bac9cbf47"
+
+        };
+
+
+        const app = initializeApp(firebaseConfig);
+
+        const auth = getAuth(app);
+
+
+        document
+            .getElementById("loginForm")
+            .addEventListener("submit", async function(event) {
+
+                event.preventDefault();
+
+
+                const email =
+                    document.getElementById("loginEmail").value.trim();
+
+
+                const password =
+                    document.getElementById("loginPassword").value;
+
+
+                const message =
+                    document.getElementById("loginMessage");
+
+
+                try {
+
+                    await signInWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    );
+
+
+                    message.textContent =
+                        "Login successful!";
+
+                    message.style.color = "green";
+
+
+                    setTimeout(function() {
+
+                        window.location.href =
+                            "index.html";
+
+                    }, 1000);
+
+
+                } catch (error) {
+
+                    message.style.color = "red";
+
+                    if (error.code === "auth/invalid-credential") {
+
+                        message.textContent =
+                            "Incorrect email or password.";
+
+                    } else {
+
+                        message.textContent =
+                            "Login failed. Please try again.";
+
+                    }
+
+                }
+
+            });
+
+    </script>
+
+</body>
+
+</html>
